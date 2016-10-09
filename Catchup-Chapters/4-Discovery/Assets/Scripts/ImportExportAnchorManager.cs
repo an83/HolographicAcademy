@@ -116,7 +116,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
         CurrentState = ImportExportState.Ready;
 
         // We need to get our local anchor store started up.
-        CurrentState = ImportExportState.AnchorStore_Initializing;
+        //CurrentState = ImportExportState.AnchorStore_Initializing;
         WorldAnchorStore.GetAsync(AnchorStoreReady);
 
         // We will register for session joined to indicate when the sharing service

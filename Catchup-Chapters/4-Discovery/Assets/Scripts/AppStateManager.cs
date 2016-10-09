@@ -21,15 +21,26 @@ public class AppStateManager : Singleton<AppStateManager>
     /// <summary>
     /// Tracks the current state in the experience.
     /// </summary>
-    public AppState CurrentAppState { get; set; }
+    public AppState CurrentAppState { get; private set; }
 
     void Start()
     {
         // We start in the 'picking avatar' mode.
-        CurrentAppState = AppState.PickingAvatar;
+        //CurrentAppState = AppState.PickingAvatar;
 
         // We start by showing the avatar picker.
-        PlayerAvatarStore.Instance.SpawnAvatarPicker();
+        //PlayerAvatarStore.Instance.SpawnAvatarPicker();
+
+
+        PlayerAvatarStore.Instance.DismissAvatarPicker();
+        LocalPlayerManager.Instance.SetUserAvatar(0);
+
+        CurrentAppState = AppState.WaitingForAnchor;
+    }
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, 300, 30), "state: " + CurrentAppState);
     }
 
     void Update()
@@ -41,6 +52,7 @@ public class AppStateManager : Singleton<AppStateManager>
                 if (PlayerAvatarStore.Instance.PickerActive == false)
                 {
                     CurrentAppState = AppState.WaitingForAnchor;
+                    Debug.Log("state: " + CurrentAppState);
                 }
                 break;
             case AppState.WaitingForAnchor:
@@ -48,6 +60,7 @@ public class AppStateManager : Singleton<AppStateManager>
                 {
                     CurrentAppState = AppState.WaitingForStageTransform;
                     GestureManager.Instance.OverrideFocusedObject = HologramPlacement.Instance.gameObject;
+                    Debug.Log("state: " + CurrentAppState);
                 }
                 break;
             case AppState.WaitingForStageTransform:
@@ -55,6 +68,7 @@ public class AppStateManager : Singleton<AppStateManager>
                 if (HologramPlacement.Instance.GotTransform)
                 {
                     CurrentAppState = AppState.Ready;
+                    Debug.Log("state: " + CurrentAppState);
                     GestureManager.Instance.OverrideFocusedObject = null;
                 }
                 break;
