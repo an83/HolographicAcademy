@@ -25,17 +25,24 @@ public class AppStateManager : Singleton<AppStateManager>
 
     void Start()
     {
-        // We start in the 'picking avatar' mode.
-        //CurrentAppState = AppState.PickingAvatar;
-
-        // We start by showing the avatar picker.
-        //PlayerAvatarStore.Instance.SpawnAvatarPicker();
-
-
+        
+#if UNITY_EDITOR
+        //OVERRIDE FOR UNITY
         PlayerAvatarStore.Instance.DismissAvatarPicker();
         LocalPlayerManager.Instance.SetUserAvatar(0);
+        ImportExportAnchorManager.Instance.CurrentState = ImportExportAnchorManager.ImportExportState.Ready;
 
         CurrentAppState = AppState.WaitingForAnchor;
+
+#else
+        // We start in the 'picking avatar' mode.
+        CurrentAppState = AppState.PickingAvatar;
+
+        // We start by showing the avatar picker.
+        PlayerAvatarStore.Instance.SpawnAvatarPicker();
+
+#endif
+
     }
 
     void OnGUI()
@@ -45,6 +52,10 @@ public class AppStateManager : Singleton<AppStateManager>
 
     void Update()
     {
+#if UNITY_EDITOR
+        ImportExportAnchorManager.Instance.CurrentState = ImportExportAnchorManager.ImportExportState.Ready;
+#endif
+
         switch (CurrentAppState)
         {
             case AppState.PickingAvatar:
