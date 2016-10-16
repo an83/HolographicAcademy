@@ -19,6 +19,7 @@ public class CustomMessages : Singleton<CustomMessages>
         StageTransform,
         ResetStage,
         ExplodeTarget,
+        EmojiPosition,
         Max
     }
 
@@ -107,6 +108,25 @@ public class CustomMessages : Singleton<CustomMessages>
 
             msg.Write(HasAnchor);
 
+            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
+            this.serverConnection.Broadcast(
+                msg,
+                MessagePriority.Immediate,
+                MessageReliability.UnreliableSequenced,
+                MessageChannel.Avatar);
+        }
+    }
+
+
+    public void SendEmoji(Vector3 position)
+    {
+        // If we are connected to a session, broadcast our head info
+        if (this.serverConnection != null && this.serverConnection.IsConnected())
+        {
+            // Create an outgoing network message to contain all the info we want to send
+            var msg = CreateMessage((byte)TestMessageID.EmojiPosition);
+            AppendVector3(msg, position);
+            
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
             this.serverConnection.Broadcast(
                 msg,
@@ -287,4 +307,5 @@ public class CustomMessages : Singleton<CustomMessages>
     }
 
     #endregion HelperFunctionsForReading
+
 }

@@ -1,6 +1,7 @@
 ﻿using HoloToolkit.Sharing;
 using HoloToolkit.Unity;
 using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 
 /// <summary>
@@ -40,6 +41,7 @@ public class RemotePlayerManager : Singleton<RemotePlayerManager>
     {
         customMessages = CustomMessages.Instance;
 
+        customMessages.MessageHandlers[CustomMessages.TestMessageID.EmojiPosition] = this.AddEmoji;
         customMessages.MessageHandlers[CustomMessages.TestMessageID.HeadTransform] = this.UpdateHeadTransform;
         customMessages.MessageHandlers[CustomMessages.TestMessageID.UserAvatar] = this.UpdateUserAvatar;
         customMessages.MessageHandlers[CustomMessages.TestMessageID.UserHit] = this.ProcessUserHit;
@@ -185,6 +187,20 @@ public class RemotePlayerManager : Singleton<RemotePlayerManager>
 
         headInfo.Anchored = (msg.ReadByte() > 0);
     }
+
+
+    private void AddEmoji(NetworkInMessage msg)
+    {
+        Debug.Log("AddEmoji");
+
+        // Parse the message
+        var userID = msg.ReadInt64();
+
+        var position = customMessages.ReadVector3(msg);
+
+        EmojiManager.Instance.AddEmojiFromRemote(position);
+    }
+
 
     /// <summary>
     /// When a user has left the session this will cleanup their

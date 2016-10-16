@@ -38,6 +38,17 @@ namespace Assets.Scripts
             var emoji = Instantiate(EmojiTemplate);
             emoji.transform.position = position;
             emoji.SetActive(true);
+
+            CustomMessages.Instance.SendEmoji(position);
+        }
+
+        public void AddEmojiFromRemote(Vector3 position)
+        {
+            Debug.Log("AddEmojiFromRemote: " + position);
+
+            var emoji = Instantiate(EmojiTemplate);
+            emoji.transform.position = position;
+            emoji.SetActive(true);
         }
     }
 }
