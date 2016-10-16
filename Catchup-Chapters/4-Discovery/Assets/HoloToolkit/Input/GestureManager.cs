@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts;
 using UnityEngine.VR.WSA.Input;
 
 namespace HoloToolkit.Unity
@@ -10,6 +11,7 @@ namespace HoloToolkit.Unity
     /// GestureManager then sends a message to that game object.
     /// </summary>
     [RequireComponent(typeof(GazeManager))]
+    [RequireComponent(typeof(EmojiManager))]
     public class GestureManager : Singleton<GestureManager>
     {
         /// <summary>
@@ -37,18 +39,23 @@ namespace HoloToolkit.Unity
             gestureRecognizer.StartCapturingGestures();
         }
 
+
         private void GestureRecognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
         {
             if (focusedObject != null)
             {
                 focusedObject.SendMessage("OnSelect");
             }
+            else
+            {
+                EmojiManager.Instance.CreateEmoji(GazeManager.Instance.Position);
+            }
         }
 
         void LateUpdate()
         {
             GameObject oldFocusedObject = focusedObject;
-            
+                
             if (GazeManager.Instance.Hit && 
                 OverrideFocusedObject == null &&
                 GazeManager.Instance.HitInfo.collider != null)
