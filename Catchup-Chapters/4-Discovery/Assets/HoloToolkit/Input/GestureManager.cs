@@ -48,7 +48,7 @@ namespace HoloToolkit.Unity
             }
             else
             {
-                EmojiManager.Instance.CreateEmoji(GazeManager.Instance.Position);
+                EmojiManager.Instance.CreateEmojiAndSend(GazeManager.Instance.Position);
             }
         }
 
